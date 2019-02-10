@@ -25,30 +25,34 @@
 
 ;;; Code:
 
-(require 'dash)
 (require 'subr-x)
+(require 'dash)
+(require 'ht)
 
-(defvar rap--map (make-hash-table :test 'equal)
-  "KEY is the string at point to replace, VALUE is what to
-  replace it with.")
+(defvar rap--map (ht)
+  "Hashmap of replacement (KEY . VALUE) pairs.
+
+KEY is the string at point to replace.
+
+VALUE is what to replace it with.")
 
 (defun replace-at-point-add (kvp-or-list)
   "Add one or more key-value pairs to the `rap--map'."
   (cond
-   ((consp kvp-or-list) (puthash (car kvp-or-list) (cdr kvp-or-list) rap--map))
-   ((listp val) (-map #'replace-at-point-add kvp-or-list))
-   (t (error "unknown value type: %s" val))))
+   ((and (cdr kvp-or-list) (atom (cdr kvp-or-list))) (ht-set rap--map (car kvp-or-list) (cdr kvp-or-list)))
+   ((listp kvp-or-list) (-map #'replace-at-point-add kvp-or-list))
+   (t (error "unknown value type: %s" kvp-or-list))))
 
 (defun replace-at-point-remove (key-or-list)
   "Remove one or more keysx from the `rap--map'."
   (cond
-   ((stringp key-or-list) (remhash key-or-list rap--map))
+   ((stringp key-or-list) (ht-remove rap--map key-or-list))
    ((listp key-or-list) (-map #'replace-at-point-remove key-or-list))
    (t (error "unknown key type: %s" key-or-list))))
 
 (defun replace-at-point-get (key)
   "Return the value of KEY in `rap--map', if present."
-  (gethash key rap--map))
+  (ht-get rap--map key))
 
 (defun replace-at-point ()
   "Look at the thing at point, and replace it if there is a
