@@ -37,10 +37,14 @@ KEY is the string at point to replace.
 
 VALUE is what to replace it with.")
 
+(defun rap--dotted-pair? (val)
+  "Returns whether VAL is a dotted pair, (A . B)."
+  (and (cdr val) (atom (cdr val))))
+
 (defun replace-at-point-add (kvp-or-list)
   "Add one or more key-value pairs to the `rap--map'."
   (cond
-   ((and (cdr kvp-or-list) (atom (cdr kvp-or-list))) (ht-set rap--map (car kvp-or-list) (cdr kvp-or-list)))
+   ((rap--dotted-pair? kvp-or-list) (ht-set rap--map (car kvp-or-list) (cdr kvp-or-list)))
    ((listp kvp-or-list) (-map #'replace-at-point-add kvp-or-list))
    (t (error "unknown value type: %s" kvp-or-list))))
 
