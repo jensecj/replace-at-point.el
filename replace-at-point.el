@@ -1,6 +1,6 @@
 ;;; replace-at-point.el --- Replace thing-at-point with something else. -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018 Jens Christian Jensen
+;; Copyright (C) 2019 Jens Christian Jensen
 
 ;; Author: Jens Christian Jensen <jensecj@gmail.com>
 ;; Package-Version: 20190210
