@@ -30,34 +30,41 @@
 (require 'dash)
 (require 'ht)
 
-(defvar rap--map (ht)
+(defvar replace-at-point--hashmap (ht)
   "Hashmap of replacement (KEY . VALUE) pairs.
 
 KEY is the string at point to replace.
-
 VALUE is what to replace it with.")
 
-(defun rap--dotted-pair? (val)
+(defun replace-at-point--dotted-pair? (val)
   "Returns whether VAL is a dotted pair, (A . B)."
   (and (cdr val) (atom (cdr val))))
 
 (defun replace-at-point-add (kvp-or-list)
-  "Add one or more key-value pairs to the `rap--map'."
+  "Add one or more key-value pairs to the
+`replace-at-point--hashmap'."
   (cond
-   ((rap--dotted-pair? kvp-or-list) (ht-set rap--map (car kvp-or-list) (cdr kvp-or-list)))
-   ((listp kvp-or-list) (-map #'replace-at-point-add kvp-or-list))
-   (t (error "unknown value type: %s" kvp-or-list))))
+   ((replace-at-point--dotted-pair? kvp-or-list)
+    (ht-set replace-at-point--hashmap (car kvp-or-list) (cdr kvp-or-list)))
+   ((listp kvp-or-list)
+    (-map #'replace-at-point-add kvp-or-list))
+   (t
+    (error "unknown argument: %s" kvp-or-list))))
 
 (defun replace-at-point-remove (key-or-list)
-  "Remove one or more keysx from the `rap--map'."
+  "Remove one or more keys from the `replace-at-point--hashmap'."
   (cond
-   ((stringp key-or-list) (ht-remove rap--map key-or-list))
-   ((listp key-or-list) (-map #'replace-at-point-remove key-or-list))
-   (t (error "unknown key type: %s" key-or-list))))
+   ((stringp key-or-list)
+    (ht-remove replace-at-point--hashmap key-or-list))
+   ((listp key-or-list)
+    (-map #'replace-at-point-remove key-or-list))
+   (t
+    (error "unknown argument: %s" key-or-list))))
 
 (defun replace-at-point-get (key)
-  "Return the value of KEY in `rap--map', if present."
-  (ht-get rap--map key))
+  "Return the value of KEY in `replace-at-point--hashmap', if
+present."
+  (ht-get replace-at-point--hashmap key))
 
 (defun replace-at-point ()
   "Look at the thing at point, and replace it if there is a
@@ -74,7 +81,6 @@ suitable replacement found."
 (defun replace-at-point-setup-defaults ()
   (require 'replace-at-point-greek)
   (require 'replace-at-point-logic)
-  (require 'replace-at-point-math)
-  )
+  (require 'replace-at-point-math))
 
 (provide 'replace-at-point)
