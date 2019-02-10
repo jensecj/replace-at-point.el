@@ -3,7 +3,6 @@
 ;; Copyright (C) 2018 Jens Christian Jensen
 
 ;; Author: Jens Christian Jensen <jensecj@gmail.com>
-;; Keywords: fullscreen
 ;; Package-Version: 20190210
 ;; Version: 0.1
 
