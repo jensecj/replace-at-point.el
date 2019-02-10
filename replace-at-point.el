@@ -57,8 +57,11 @@ suitable replacement found."
   (interactive)
   (let ((tap (thing-at-point 'word t))
         (bounds (bounds-of-thing-at-point 'word)))
-    (when-let ((replacement (replace-at-point-get tap)))
-      (kill-region (car bounds) (cdr bounds))
-      (insert replacement))))
+    (if-let ((replacement (replace-at-point-get tap)))
+        (progn
+          (kill-region (car bounds) (cdr bounds))
+          (insert replacement))
+      (message "no replacement found for `%s'" tap))))
+
 
 (provide 'replace-at-point)
