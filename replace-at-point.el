@@ -67,5 +67,8 @@ suitable replacement found."
           (insert replacement))
       (message "no replacement found for `%s'" tap))))
 
+(defun replace-at-point-setup-defaults ()
+  (require 'replace-at-point-greek)
+  )
 
 (provide 'replace-at-point)
