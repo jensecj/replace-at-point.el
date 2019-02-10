@@ -69,6 +69,8 @@ suitable replacement found."
 
 (defun replace-at-point-setup-defaults ()
   (require 'replace-at-point-greek)
+  (require 'replace-at-point-logic)
+  (require 'replace-at-point-math)
   )
 
 (provide 'replace-at-point)
